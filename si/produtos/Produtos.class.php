@@ -4,6 +4,7 @@
 
     use si\APIIntegrada;
     use si\helpers\Cache;
+    use stdClass;
 
     class Produtos {
 
@@ -17,6 +18,13 @@
 	    }
 	}
 
+	/**
+	 * Faz uma busca por produtos do site
+	 * @param array $parans
+	 * @param int $page
+	 * @param int $forPage
+	 * @return stdClass
+	 */
 	function busca(array $parans = null, $page = 1, $forPage = 20) {
 	    $produtos = APIIntegrada::exec('produtos', APIIntegrada::extend($parans, [
 				'page' => (int) $page,
