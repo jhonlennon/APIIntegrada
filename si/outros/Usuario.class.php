@@ -43,7 +43,6 @@
         {
             if ($this->getToken()) {
                 $url = APIIntegrada::getURI(false) . '/acesso/auth/' . APIIntegrada::getToken() . '/' . $this->getToken();
-                exit($url);
                 header('Location: ' . $url);
             } else {
                 throw new Exception('O usuário deve estar logado para ser redirecionado para o sistema integrado.');
