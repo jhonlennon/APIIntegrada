@@ -42,7 +42,9 @@
         function redirecionar()
         {
             if ($this->getToken()) {
-                header('Location: http://www.sistemaintegrado.com.br/si/acesso/auth/' . APIIntegrada::getToken() . '/' . $this->getToken());
+                $url = APIIntegrada::getURI(false) . '/acesso/auth/' . APIIntegrada::getToken() . '/' . $this->getToken();
+                exit($url);
+                header('Location: ' . $url);
             } else {
                 throw new Exception('O usuário deve estar logado para ser redirecionado para o sistema integrado.');
             }
