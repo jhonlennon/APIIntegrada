@@ -7,42 +7,48 @@
 
     class Carrinho {
 
-	/**
-	 * Cria o carrinho e retorna a URL para redirecionamento
-	 * @param array $produtos
-	 * @param int $revendedor ID do revendor responsável pela venda
-	 * @return string URL do carrinho
-	 * @throws Exception
-	 */
-	public static function criar(array $produtos, $revendedor = 0) {
+        /**
+         * Cria o carrinho e retorna a URL para redirecionamento
+         * @param array $produtos
+         * @param int $revendedor ID do revendor responsável pela venda
+         * @param boolean $redirecionar Se true redireciona para o carrinho
+         * @return string URL do carrinho
+         * @throws Exception
+         */
+        public static function criar(array $produtos, $revendedor = 0, $redirecionar = false)
+        {
 
-	    # Sem produtos no carrinho
-	    if (!$produtos) {
-		throw new Exception('Carrinho vazio.');
-	    }
+            # Sem produtos no carrinho
+            if (!$produtos) {
+                throw new Exception('Carrinho vazio.');
+            }
 
-	    # Checando formatação
-	    foreach ($produtos as $v) {
-		if (!is_array($v)) {
-		    throw new Exception('Não é um Array de produtos [produto/quantidade].');
-		} else if (empty($v['produto']) or ! is_int($v['produto'])) {
-		    throw new Exception("{$v['produto']}: Produto inválido.");
-		} else if (empty($v['quantidade']) or ! is_int($v['quantidade'])) {
-		    throw new Exception('Quantidade inválida.');
-		}
-	    }
+            # Checando formatação
+            foreach ($produtos as $v) {
+                if (!is_array($v)) {
+                    throw new Exception('Não é um Array de produtos [produto/quantidade].');
+                } else if (empty($v['produto']) or ! is_int($v['produto'])) {
+                    throw new Exception("{$v['produto']}: Produto inválido.");
+                } else if (empty($v['quantidade']) or ! is_int($v['quantidade'])) {
+                    throw new Exception('Quantidade inválida.');
+                }
+            }
 
-	    $curl = APIIntegrada::exec('carrinho/novo', [
-			'produtos' => $produtos,
-			'revendedor' => $revendedor,
-			    ], 0);
+            $curl = APIIntegrada::exec('carrinho/novo', [
+                        'produtos' => $produtos,
+                        'revendedor' => $revendedor,
+                            ], 0);
 
-	    if ($curl->result == 1) {
-		return $curl->url;
-	    } else {
-		throw new Exception($curl->message);
-	    }
-	}
+            if ($curl->result == 1) {
+                if ($redirecionar) {
+                    header('Location: ' . $curl->url);
+                } else {
+                    return $curl->url;
+                }
+            } else {
+                throw new Exception($curl->message);
+            }
+        }
 
     }
     

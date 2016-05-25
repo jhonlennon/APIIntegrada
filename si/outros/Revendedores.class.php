@@ -17,7 +17,8 @@
          */
         static function busca(array $parans = null, $page = 1, $forpage = 10)
         {
-            return new Registros(APIIntegrada::exec('revendedores', ['page' => $page, 'forpage' => $forpage] + (array) $parans, 15));
+            $busca = APIIntegrada::exec('revendedores', ['page' => $page, 'forpage' => $forpage] + (array) $parans, 15);
+            return new Registros($busca);
         }
 
         /**

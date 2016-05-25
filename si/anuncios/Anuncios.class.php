@@ -4,6 +4,8 @@
 
     use si\APIIntegrada;
     use si\helpers\Cache;
+    use si\helpers\Registros;
+    use stdClass;
 
     class Anuncios {
 
@@ -34,6 +36,13 @@
             }
         }
 
+        /**
+         * 
+         * @param array $parans
+         * @param int $page
+         * @param int $forPage
+         * @return Registros
+         */
         function busca(array $parans = null, $page = 1, $forPage = 20)
         {
             $anuncios = APIIntegrada::exec('anuncios', APIIntegrada::extend($parans, [
@@ -45,7 +54,7 @@
                 self::$anuncios[$anuncio->urlamigavel] = $anuncio;
             }
 
-            return $anuncios;
+            return new Registros($anuncios);
         }
 
         function detalhes($url)
@@ -72,7 +81,7 @@
             }
         }
 
-        static function incAcesso(\stdClass $anuncio)
+        static function incAcesso(stdClass $anuncio)
         {
             $spot = $anuncio->spot;
             APIIntegrada::exec('anuncios/incAcesso', ['spot' => $spot], 0);

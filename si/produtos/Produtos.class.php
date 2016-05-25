@@ -4,55 +4,92 @@
 
     use si\APIIntegrada;
     use si\helpers\Cache;
+    use si\helpers\Registros;
     use stdClass;
 
     class Produtos {
 
-	private static $cache;
-	private static $produtos = [];
+        protected $_type = 'produto';
 
-	static function init() {
-	    if (!self::$cache) {
-		self::$cache = new Cache('produtos.all', 15);
-		self::$produtos = self::$cache->getContent();
-	    }
-	}
+        /**
+         * 
+         * @staticvar Cache $_cache
+         * @return Cache
+         */
+        protected static function _cache()
+        {
+            static $_cache = null;
+            if (!$_cache) {
+                $_cache = new Cache(str_replace(['\\', '/'], '.', get_called_class()) . '.all', 15);
+            }
+            return $_cache;
+        }
 
-	/**
-	 * Faz uma busca por produtos do site
-	 * @param array $parans
-	 * @param int $page
-	 * @param int $forPage
-	 * @return stdClass
-	 */
-	function busca(array $parans = null, $page = 1, $forPage = 20) {
-	    $produtos = APIIntegrada::exec('produtos', APIIntegrada::extend($parans, [
-				'page' => (int) $page,
-				'forpage' => $forPage,
-	    ]));
+        /**
+         * 
+         * @staticvar array $_array_cache
+         * @param string $key
+         * @param \stdClass $value
+         * @return array
+         */
+        protected static function _array_cache($key = null, $value = null)
+        {
+            static $_array_cache = null;
+            if ($_array_cache === null) {
+                $_array_cache = self::_cache()->getContent();
+            }
+            if ($key !== null) {
+                $_array_cache[$key] = $value;
+            }
+            return $_array_cache;
+        }
 
-	    foreach ($produtos->data as $produto) {
-		self::$produtos[$produto->urlamigavel] = $produto;
-	    }
+        /**
+         * Faz uma busca por produtos do site
+         * @param array $parans
+         * @param int $page
+         * @param int $forPage
+         * @return Registros
+         */
+        function busca(array $parans = null, $page = 1, $forPage = 20)
+        {
+            $busca = APIIntegrada::exec('produtos', APIIntegrada::extend($parans, [
+                                'type' => $this->_type,
+                                'page' => (int) $page,
+                                'forpage' => $forPage,
+            ]));
 
-	    return $produtos;
-	}
+            foreach ($busca->data as $produto) {
+                self::_array_cache($produto->urlamigavel, $produto);
+            }
 
-	function detalhes($url) {
-	    if (isset(self::$produtos[$url])) {
-		return self::$produtos[$url];
-	    } else {
-		$produto = APIIntegrada::exec('produtos/detalhes', ['urlamigavel' => $url]);
-		self::$produtos[$produto->urlamigavel] = $produto;
-		return $produto;
-	    }
-	}
+            return new Registros($busca);
+        }
 
-	function __destruct() {
-	    self::$cache->setContent(self::$produtos);
-	}
+        /**
+         * Retorna os detalhes
+         * @param string $url
+         * @return array
+         */
+        function detalhes($url)
+        {
+            $produtos = self::_array_cache();
+            if (isset($produtos[$url])) {
+                return $produtos[$url];
+            } else {
+                $produto = APIIntegrada::exec('produtos/detalhes', ['urlamigavel' => $url]);
+                self::_array_cache($produto->urlamigavel, $produto);
+                return $produto;
+            }
+        }
+
+        /**
+         * Gravando resultados no cache
+         */
+        function __destruct()
+        {
+            self::_cache()->setContent(self::_array_cache());
+        }
 
     }
-
-    Produtos::init();
     

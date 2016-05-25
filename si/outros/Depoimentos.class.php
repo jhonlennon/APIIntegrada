@@ -8,7 +8,7 @@
 
 	private static $depoimentos = [];
 	private static $index = [];
-
+        
 	public static function getDepoimentos() {
 	    if (!self::$depoimentos) {
 		$busca = APIIntegrada::exec('depoimentos', ['page' => 1, 'forpage' => 500], 15)->data;

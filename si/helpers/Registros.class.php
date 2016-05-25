@@ -2,7 +2,7 @@
 
     namespace si\helpers;
 
-    use stdClass;
+use stdClass;
 
     class Registros {
 
@@ -18,39 +18,23 @@
         }
 
         /**
-         * 
-         * @return int
-         */
-        function getTotalPaginas()
-        {
-            return $this->dados->pages;
-        }
-
-        /**
-         * 
-         * @return int
-         */
-        function getPaginaAtual()
-        {
-            return $this->dados->page;
-        }
-
-        /**
-         * 
-         * @return int
-         */
-        function getTotalRegistros()
-        {
-            return $this->dados->count;
-        }
-
-        /**
          * Retorna a lista de registros
          * @return stdClass[]
          */
         function getRegistros()
         {
             return $this->dados->data;
+        }
+
+        /**
+         * Monta a páginação
+         * 
+         * @return Pagination
+         */
+        function getPagination()
+        {
+            $paginacao = new Pagination($this->dados->page, $this->dados->forPage, $this->dados->count);
+            return $paginacao;
         }
 
     }

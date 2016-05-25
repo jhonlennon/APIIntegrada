@@ -2,9 +2,10 @@
 
     namespace si\ecommerce;
 
-    use si\APIIntegrada;
-    use si\helpers\Cache;
-    use si\outros\Usuario;
+use si\APIIntegrada;
+use si\helpers\Cache;
+use si\helpers\Registros;
+use si\outros\Usuario;
 
     class Pedidos {
 
@@ -23,6 +24,12 @@
 	    $this->pedidos = isset($_SESSION[self::class]) ? $_SESSION[self::class] : [];
 	}
 
+        /**
+         * 
+         * @param int $page
+         * @param int $forPage
+         * @return Registros
+         */
 	function busca($page = 1, $forPage = 10) {
 	    $busca = APIIntegrada::exec('pedidos', [
 			'loginToken' => $this->user->getToken(),
@@ -34,7 +41,7 @@
 		$this->pedidos[$pedido->token] = $pedido;
 	    }
 
-	    return $busca;
+	    return new Registros($busca);
 	}
 
 	function detalhes($token) {

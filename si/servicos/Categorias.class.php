@@ -1,6 +1,6 @@
 <?php
 
-    namespace si\noticias;
+    namespace si\servicos;
 
     use si\abs\Options;
 
@@ -8,7 +8,7 @@
 
         public function __construct()
         {
-            $this->ref = 'produtos';
+            $this->ref = 'servicos';
             $this->refid = 0;
         }
 
