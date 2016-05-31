@@ -15,6 +15,15 @@
             return $menus;
         }
 
+        public static function getSubMenu($url)
+        {
+            $menu = self::detalhes($url);
+            if ($menu and isset($menu->submenu)) {
+                return $menu->submenu;
+            }
+            return null;
+        }
+
         private static function indexarMenus($menus)
         {
             if ($menus) {
