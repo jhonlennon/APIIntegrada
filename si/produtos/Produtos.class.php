@@ -67,6 +67,16 @@
         }
 
         /**
+         * Retorna as variações do produto
+         * @param int $idProduto
+         * @return Registros
+         */
+        function variacoes($idProduto)
+        {
+            return new Registros(APIIntegrada::exec('produtos', ['produtoref' => $idProduto]));
+        }
+
+        /**
          * Retorna os detalhes
          * @param string $url
          * @return array
