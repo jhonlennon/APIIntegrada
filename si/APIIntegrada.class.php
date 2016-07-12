@@ -504,7 +504,7 @@
         {
 
             # Diretório do arquivo
-            $_file_load_view = $_view . '.phtml';
+            $_file_load_view = '_modules/site/views/' . $_view . '.phtml';
 
             # Verificando arquivo
             if (!file_exists($_file_load_view)) {

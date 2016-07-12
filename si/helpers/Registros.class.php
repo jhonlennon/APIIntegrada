@@ -27,6 +27,15 @@ use stdClass;
         }
 
         /**
+         * Retorna quantidade de registros
+         * @return stdClass[]
+         */
+        function getCount()
+        {
+            return $this->dados->count;
+        }
+
+        /**
          * Monta a páginação
          * 
          * @return Pagination

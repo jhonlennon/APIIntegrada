@@ -9,6 +9,7 @@
     class Noticias {
 
         private static $noticias;
+        private static $autores;
 
         /** @var Cache */
         private static $cache;
@@ -34,12 +35,49 @@
                                 'page' => (int) $page,
                                 'forpage' => $forPage,
             ]));
-
+            
             foreach ($noticias->data as $noticia) {
                 self::$noticias[$noticia->urlamigavel] = $noticia;
             }
 
             return new Registros($noticias);
+        }
+        function autores(array $parans = null, $page = 1, $forPage = 20)
+        {
+            $autores = APIIntegrada::exec('noticias/autores', APIIntegrada::extend($parans, [
+                                'page' => (int) $page,
+                                'forpage' => $forPage,
+            ]));
+
+            foreach ($autores as $autor) {
+                self::$autores[$autor->urlamigavel] = $autor;
+            }
+
+            return $autores;
+        }
+
+        function detalhesAutor($url)
+        {
+
+            # Verificando no cache
+            if (!empty(self::$autores[$url])) {
+                return self::$autores[$url];
+            }
+
+            # Buscando o $autor
+            $autor = APIIntegrada::exec('noticias/autores', [
+                        'urlamigavel' => $url,
+            ])[0];
+            
+            # $autor encontrado
+            if ($autor) {
+                self::$autores[$autor->urlamigavel] = $autor;
+                return $autor;
+            }
+            # $autor inválido
+            else {
+                return false;
+            }
         }
 
         function detalhes($url)

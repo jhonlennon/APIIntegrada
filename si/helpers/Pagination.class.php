@@ -277,6 +277,11 @@
             return $this->_indexes;
         }
 
+        public function getPages()
+        {
+            return $this->_arrayPages;
+        }
+
         function getPerPagina()
         {
             return $this->_perPage;

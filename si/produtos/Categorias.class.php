@@ -1,6 +1,6 @@
 <?php
 
-    namespace si\noticias;
+    namespace si\produtos;
 
     use si\abs\Options;
 
