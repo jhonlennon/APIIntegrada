@@ -2,8 +2,9 @@
 
     namespace si;
 
-    use Exception;
-    use si\helpers\Cache;
+use Exception;
+use si\helpers\Cache;
+use si\helpers\Session;
 
     class APIIntegrada {
 
@@ -62,6 +63,8 @@
          */
         public function __construct()
         {
+
+            Session::setDirectory(__DIR__ . '/../_temp/session');
 
             # Data do dia
             $this->dtHoje = date('Y-m-d');

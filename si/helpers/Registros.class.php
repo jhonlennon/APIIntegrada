@@ -2,7 +2,7 @@
 
     namespace si\helpers;
 
-use stdClass;
+    use stdClass;
 
     class Registros {
 
