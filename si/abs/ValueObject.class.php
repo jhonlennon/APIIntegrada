@@ -18,8 +18,8 @@
          */
         public static function converter(array $registros = null, $class)
         {
-            foreach ((array) $registros as &$r) {
-                $r = new $class($r);
+            foreach ((array) $registros as $key => $r) {
+                $registros[$key] = new $class($r);
             }
 
             return $registros;
