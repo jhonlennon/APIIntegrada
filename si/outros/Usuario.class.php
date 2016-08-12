@@ -70,7 +70,6 @@
         function __destruct()
         {
             $this->getSession()->set('usuarios', $this->user);
-            // $_SESSION[self::class] = $this->user;
         }
 
         /**
@@ -85,6 +84,38 @@
                 $_session = new Session(__CLASS__);
             }
             return $_session;
+        }
+
+        /**
+         * <b>Campos Pessoa Física:</b><br> 
+         * nome<br>
+         * login<br>
+         * cpf<br>
+         * nascimento<br>
+         * email<br>
+         * sexo - `m` masculino | `f` feminino<br>
+         * telefone<br>
+         * celular1<br>
+         * celular2<br>
+         * senha - 5 à 20 caracteres<br>
+         * rsenha - Verificação de senha <br>
+         * <b>Campos Pessoa Jurídica</b><br>
+         * nomefantasia<br>
+         * razaosocial<br>
+         * cnpj<br>
+         * inscricaoestadual<br>
+         * inscricaomunicipal<br>
+         * <br>OBS: Todos os campos de Pessoa física são obrigatórios para o cadastro de pessoa jurídica
+         * @param array $dados
+         * 
+         * @param boolean $pessoaJuridica
+         * @return Usuario
+         */
+        public function cadastrar(array $dados, $pessoaJuridica = false)
+        {
+            $dados += ['perfil' => $pessoaJuridica ? 'pj' : 'pf'];
+            $this->user = APIIntegrada::exec('usuarios/cadastrar', $dados);
+            return $this;
         }
 
     }
